@@ -12,7 +12,7 @@ namespace Lua_Example
     {
         static void Main(string[] args)
         {
-            //RunScriptConsole();
+            RunScriptConsole();
         }
 
         /// <summary>
