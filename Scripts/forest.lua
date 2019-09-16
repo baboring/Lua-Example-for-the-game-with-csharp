@@ -11,8 +11,8 @@ function onEnter()
 end;
 
 --Add some text--
-forest.description = "A deep dark foreboding forest. A bit scary.";
 forest.name = "Dark Forest";
+forest.description = "A deep dark foreboding forest. A bit scary.";
 
 --Add a function pointer--
 forest.OnEnter = onEnter;
