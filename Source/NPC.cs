@@ -24,7 +24,7 @@ namespace Lua_Example
         {
             get
             {
-               return (scriptPower.Globals[name] as Table).Get("name").String;
+                return (scriptPower.Globals[name] as Table).Get("name").String;
             }
         }
 
@@ -32,7 +32,7 @@ namespace Lua_Example
         {
             get
             {
-               return (scriptPower.Globals[name] as Table).Get("description").String;
+                return (scriptPower.Globals[name] as Table).Get("description").String;
             }
         }
 
@@ -66,9 +66,22 @@ namespace Lua_Example
                 {
                     Console.WriteLine(this.Description);
                 }
+                else if(answer == "t")
+                {
+                    this.OnTalk();
+                }
             }
         }
 
+        public void OnTalk()
+        {
+            scriptPower.DoString("knight:OnTalk()");
+        }
+
+        public void Say(string say)
+        {
+            Console.WriteLine(Name + " says \"" + say +"\"");
+        }
 
     }
 

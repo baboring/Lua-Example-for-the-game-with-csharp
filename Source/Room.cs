@@ -16,13 +16,14 @@ namespace Lua_Example
 
 
         private ArrayList npcList = new ArrayList();
+        private ArrayList wayList = new ArrayList();
 
         [MoonSharpVisible(true)]
         public string Name
         {
             get
             {
-               return (scriptPower.Globals[name] as Table).Get("name").String;
+                return (scriptPower.Globals[name] as Table).Get("name").String;
             }
         }
 
@@ -30,7 +31,7 @@ namespace Lua_Example
         {
             get
             {
-               return (scriptPower.Globals[name] as Table).Get("description").String;
+                return (scriptPower.Globals[name] as Table).Get("description").String;
             }
         }
 
@@ -42,20 +43,32 @@ namespace Lua_Example
             scriptPower.DoFile(RPG.SCRIPT_PATH + scriptName);
         }
 
+
+        public void AddPassageWay(PassageWay pw)
+        {
+            wayList.Add(pw);
+        }
+
         public void DescribeOccupants()
         {
+
+            foreach (PassageWay pw in wayList)
+            {
+                Console.WriteLine(pw.description);
+            }
+
             foreach (NPC n in npcList)
             {
                 Console.WriteLine("There is a " + n.Name + " here.");
             }
+
+
         }
 
         public void AddNPC(NPC npc)
         {
             npcList.Add(npc);
         }
-
-
 
         public void DisplayInteractions()
         {
@@ -64,9 +77,15 @@ namespace Lua_Example
                 Console.WriteLine("Press " + n.interactKey +
                  " to interact with " + n.Name);
             }
+
+            foreach (PassageWay pw in wayList)
+            {
+                Console.WriteLine("Press " + pw.key + " to use the "
+                 + pw.description);
+            }
         }
 
-        public void CheckInteractions(string keypress)
+        public void CheckInteractions(ref Room currentRoom, string keypress)
         {
             foreach (NPC n in npcList)
             {
@@ -76,7 +95,27 @@ namespace Lua_Example
                     return;
                 }
             }
+
+            foreach (PassageWay pw in wayList)
+            {
+                if (pw.key == keypress)
+                {
+                    currentRoom = pw.destination;
+                    currentRoom.OnEnter();
+                }
+            }
         }
+
+        public void OnEnter()
+        {
+            scriptPower.DoString(name + ":OnEnter()");
+        }
+
+        // OnLeave
+        // OnPush
+        // OnGive
+        // OnStealFrom
+        // OnDeath
 
     }
 

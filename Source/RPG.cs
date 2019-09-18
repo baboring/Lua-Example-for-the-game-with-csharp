@@ -49,12 +49,18 @@ namespace Lua_Example
             // lua.RegisterFunction("SetStartRoom", this, this.GetType().GetMethod("SetStartRoom"));
             UserData.RegisterType<Room>();
             UserData.RegisterType<NPC>();
+            UserData.RegisterType<PassageWay>();
 
             lua.Globals["CreateRoom"] = (Func<string, Room>)CreateRoom;
             lua.Globals["CreateNPC"] = (Func<string, NPC>)CreateNPC;
+            lua.Globals["CreatePassageWay"] = (Func<string, Room, PassageWay>)CreatePassageWay;
+
             lua.Globals["AddNPCToRoom"] = (Action<Room, NPC>)AddNPCToRoom;
             lua.Globals["SetStartRoom"] = (Action<Room>)SetStartRoom;
             lua.Globals["ClearScreen"] = (Action)ClearScreen;
+
+            lua.Globals["seenTreasure"] = 0;
+
             lua.DoFile(SCRIPT_PATH + "setup.lua");
         }
 
@@ -69,7 +75,7 @@ namespace Lua_Example
                 string ans = Console.ReadLine();
                 ClearScreen();
 
-                currentRoom.CheckInteractions(ans);
+                currentRoom.CheckInteractions(ref currentRoom, ans);                
                 if (ans == "q")
                     quit = true;
             }
@@ -86,6 +92,11 @@ namespace Lua_Example
         public NPC CreateNPC(string npcName)
         {
             return new NPC(npcName, lua);
+        }
+
+        public PassageWay CreatePassageWay(string describe, Room r)
+        {
+            return new PassageWay(describe, r);
         }
 
         public void SetStartRoom(Room r)
@@ -115,6 +126,8 @@ namespace Lua_Example
             for (int i = 0; i < 50; i++)
                 Console.WriteLine();
         }
+
+
 
     }
 
